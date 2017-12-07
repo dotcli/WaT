@@ -11,15 +11,23 @@ const app = createOrbitViewer({
   clearColor: 0x000000,
   clearAlpha: 1,
   fov: 65,
-  position: new THREE.Vector3(0, 0, 1), // camera
+  position: new THREE.Vector3(0, 1, 0), // camera
 })
+app.camera.rotation.z = 90 * Math.PI / 180;
 
 const eyeStalks = [];
 const EYESTALK_COUNT = 13;
+const INIT_RADIUS = 0.5;
+const INIT_Y = 0.5;
 for (var i = 0; i < EYESTALK_COUNT; i++) {
   const x = -0.5*(EYESTALK_COUNT-1)+i; // spawn eyeStalks from the middle, with 1 unit in between;
+
+  // place eyestalks in a circle from the middle
+  let pos = new THREE.Vector3(INIT_RADIUS, INIT_Y, 0);
+  pos.applyAxisAngle((new THREE.Vector3(0,1,0)), Math.PI/(EYESTALK_COUNT/2)*i);
+
   let eyeStalk = new EyeStalk(
-    x,0,0, // position
+    pos.x,pos.y,pos.z, // position
     10, // seg
     0.01 // segLength
   );
