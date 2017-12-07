@@ -8,7 +8,8 @@ const EyeStalk = require('./lib/eyeStalkRender');
 
 /* Scene */
 const app = createOrbitViewer({
-  clearColor: 0x000000,
+  // clearColor: 0x000000,
+  clearColor: 0x7b548b,
   clearAlpha: 1,
   fov: 65,
   position: new THREE.Vector3(0, 1, 0), // camera
@@ -29,7 +30,16 @@ for (var i = 0; i < EYESTALK_COUNT; i++) {
   let eyeStalk = new EyeStalk(
     pos.x,pos.y,pos.z, // position
     10, // seg
-    0.01 // segLength
+    0.01, // segLength
+    // [0xffff00, 0xff00ff, 0x00ffff], // yellow, magenta, cyan. pair with black bg
+    // [0xde5a33, 0x00b0d4, 0xdeebf0], // color from http://acko.net. pair with 0x495e77
+    // [0xf7e73f, 0xa1dfb3, 0xea7dce], // color from graffiti. pair with 0x8a6288
+    // [0xd850c3, 0x5c02b8, 0x89ff42], // color from graffiti. pair with 0x1d232c
+    // [0xedf9f5, 0xfa8fc0, 0x09f8f9], // color from graffiti. pair with 0xb8ece5
+    // [0xffffff, 0xCBE86B, 0x1C140D], // color from http://www.colourlovers.com/palette/359978/w_o_r_d_l_e_s_s_. pair with 0xffffff
+    // [0xEDE574, 0xFC913A, 0xE1F5C4], // color from http://www.colourlovers.com/palette/937624/Dance_To_Forget pair with 0xFF4E50
+    // [0xF4FAD2, 0xFF4242, 0xE1EDB9, 0xD4EE5E], // color from http://www.colourlovers.com/palette/937624/Dance_To_Forget pair with 0xF0F2EB
+    [0xed5742, 0xf9c600, 0xbacf33, 0x0178ad, 0xffffff], // pair with 0x7b548b
   );
   eyeStalks.push(eyeStalk);
   app.scene.add(eyeStalk);
@@ -53,13 +63,6 @@ document.addEventListener('mousemove', (e)=>{
     newPos.applyAxisAngle((new THREE.Vector3(0,1,0)), Math.PI/(eyeStalks.length/2)*i);
     eyeStalks[i].move(newPos.toArray(), 0);
   }
-  // newPos.multiplyScalar(10);
-  // eyeStalks[0].move(newPos.toArray(), 0);
-  // eyeStalks[1].move(newPos.toArray(), 0);
-  // newPos.applyAxisAngle((new THREE.Vector3(0,1,0)), Math.PI/2);
-  // eyeStalks[2].move(newPos.toArray(), 0);
-  // newPos.applyAxisAngle((new THREE.Vector3(0,1,0)), Math.PI/2);
-  // eyeStalks[3].move(newPos.toArray(), 0);
 });
 document.addEventListener('click', (e)=>{
   for (var i = 0; i < eyeStalks.length; i++) {
