@@ -35,6 +35,10 @@ for (var i = 0; i < EYESTALK_COUNT; i++) {
   app.scene.add(eyeStalk);
 }
 
+// lighting
+const directional = new THREE.DirectionalLight( 0xffffff, 1 );
+app.scene.add(directional);
+
 const system = VerletSystem3D({
   gravity: [0, -1, 0],
   // min? max?
