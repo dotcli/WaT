@@ -27,7 +27,9 @@
     "uglify-js": "^2"
   },
   "dependencies": {
+    "@superguigui/wagner": "^0.1.6",
     "dat.gui": "^0.6.1",
+    "glslify": "^6.1.0",
     "randomcolor": "",
     "three": "^0.85.2",
     "three-orbit-viewer": "^69.3.1",

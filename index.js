@@ -4,17 +4,53 @@ const randomColor = require('randomcolor');
 global.THREE = require('three');
 const createOrbitViewer = require('three-orbit-viewer')(THREE)
 const VerletSystem3D = require('verlet-system/3d');
+const WAGNER = require('@superguigui/wagner');
+const NoisePass = require('@superguigui/wagner/src/passes/noise/noise');
+const RGBSplitPass = require('@superguigui/wagner/src/passes/rgbsplit/rgbsplit');
+const VignettePass = require('@superguigui/wagner/src/passes/vignette/VignettePass');
+const ZoomBlurPass = require('@superguigui/wagner/src/passes/zoom-blur/ZoomBlurPass');
 const EyeStalk = require('./lib/eyeStalkRender');
 
 /* Scene */
 const app = createOrbitViewer({
-  // clearColor: 0x000000,
   clearColor: 0x7b548b,
   clearAlpha: 1,
   fov: 65,
   position: new THREE.Vector3(0, 1, 0), // camera
 })
 app.camera.rotation.z = 90 * Math.PI / 180;
+
+// effects
+app.renderer.autoClearColor = true;
+const composer = new WAGNER.Composer(app.renderer);
+composer.setSize( window.innerWidth, window.innerHeight );
+const noisePass = new NoisePass({
+  amount: 0.2,
+  speed: 0,
+});
+const rgbSplitPass = new RGBSplitPass({
+  delta: {
+    x: 50,
+    y: 50,
+  },
+});
+const vignettePass = new VignettePass({
+  boost: 1.2,
+  reduction: 0.2,
+});
+const zoomBlurPass = new ZoomBlurPass({
+  strength: 0.02,
+});
+function renderPass() {
+  composer.reset();
+  composer.render(app.scene, app.camera);
+  // NOTE vignette pass changes color too much
+  // composer.pass(vignettePass);
+  composer.pass(rgbSplitPass);
+  composer.pass(noisePass);
+  composer.pass(zoomBlurPass);
+  composer.toScreen();
+}
 
 const eyeStalks = [];
 const EYESTALK_COUNT = 13;
@@ -76,4 +112,7 @@ app.on('tick', function(dt) {
     system.integrate(eyeStalks[i].sim.vertices, dt/1000);
     eyeStalks[i].update(dt/1000);
   }
+})
+app.on('render', function(dt) {
+  renderPass();
 })
