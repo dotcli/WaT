@@ -91,8 +91,8 @@ const system = VerletSystem3D({
 });
 
 document.addEventListener('mousemove', (e)=>{
-  let x = e.screenX / window.innerWidth - 0.5;
-  let y = e.screenY / window.innerHeight - 0.5;
+  let x = e.pageX / window.innerWidth - 0.5;
+  let y = e.pageY / window.innerHeight - 0.5;
   y *= -1;
   for (var i = 0; i < eyeStalks.length; i++) {
     let newPos = new THREE.Vector3(x, y, 0);
