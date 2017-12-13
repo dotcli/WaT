@@ -96,7 +96,11 @@ document.addEventListener('mousemove', (e)=>{
   for (var i = 0; i < bouncers.length; i++) {
     let newPos = new THREE.Vector3(x, y, 0);
     newPos.applyAxisAngle((new THREE.Vector3(0,1,0)), Math.PI/(bouncers.length/2)*i);
-    bouncers[i].move(newPos.toArray(), 0);
+    bouncers[i].moveHead({
+      x: newPos.x,
+      y: newPos.y,
+      z: newPos.z,
+    });
   }
 });
 document.addEventListener('click', (e)=>{
