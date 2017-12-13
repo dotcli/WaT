@@ -1,13 +1,11 @@
 {
-  "name": "eyestalks",
+  "name": "WaT",
   "version": "1.0.0",
   "description": "hanging bouncy string that jumps on command. built with verlet-system",
   "main": "index.js",
   "scripts": {
     "start": "budo index.js:bundle.js --live -- -t babelify",
-    "build": "browserify index.js -t babelify | uglifyjs -cm > bundle.js",
-    "deploy": "npm run build && npm run deploy:upload",
-    "deploy:upload": "surge -d eyestalks.surge.sh"
+    "build": "browserify index.js -t babelify | uglifyjs -cm > bundle.js"
   },
   "contributors": [
     "lcb931023",
