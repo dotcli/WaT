@@ -1,6 +1,6 @@
 {
   "name": "eyestalks",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "hanging bouncy string that jumps on command. built with verlet-system",
   "main": "index.js",
   "scripts": {
