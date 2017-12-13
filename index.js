@@ -1,6 +1,5 @@
 // TODO add more boiletplate (e.g. dat.gui control)
 
-const randomColor = require('randomcolor');
 global.THREE = require('three');
 const createOrbitViewer = require('three-orbit-viewer')(THREE)
 const VerletSystem3D = require('verlet-system/3d');
@@ -9,7 +8,7 @@ const NoisePass = require('@superguigui/wagner/src/passes/noise/noise');
 const RGBSplitPass = require('@superguigui/wagner/src/passes/rgbsplit/rgbsplit');
 const VignettePass = require('@superguigui/wagner/src/passes/vignette/VignettePass');
 const ZoomBlurPass = require('@superguigui/wagner/src/passes/zoom-blur/ZoomBlurPass');
-const EyeStalk = require('./lib/eyeStalkRender');
+const Bouncer = require('./lib/bouncer');
 
 /* Scene */
 const app = createOrbitViewer({
@@ -52,18 +51,18 @@ function renderPass() {
   composer.toScreen();
 }
 
-const eyeStalks = [];
-const EYESTALK_COUNT = 13;
+const bouncers = [];
+const BOUNCER_COUNT = 13;
 const INIT_RADIUS = 0.5;
 const INIT_Y = 0.5;
-for (var i = 0; i < EYESTALK_COUNT; i++) {
-  const x = -0.5*(EYESTALK_COUNT-1)+i; // spawn eyeStalks from the middle, with 1 unit in between;
+for (var i = 0; i < BOUNCER_COUNT; i++) {
+  const x = -0.5*(BOUNCER_COUNT-1)+i; // spawn bouncers from the middle, with 1 unit in between;
 
-  // place eyestalks in a circle from the middle
+  // place bouncers in a circle from the middle
   let pos = new THREE.Vector3(INIT_RADIUS, INIT_Y, 0);
-  pos.applyAxisAngle((new THREE.Vector3(0,1,0)), Math.PI/(EYESTALK_COUNT/2)*i);
+  pos.applyAxisAngle((new THREE.Vector3(0,1,0)), Math.PI/(BOUNCER_COUNT/2)*i);
 
-  let eyeStalk = new EyeStalk(
+  let bouncer = new Bouncer(
     pos.x,pos.y,pos.z, // position
     10, // seg
     0.01, // segLength
@@ -77,8 +76,8 @@ for (var i = 0; i < EYESTALK_COUNT; i++) {
     // [0xF4FAD2, 0xFF4242, 0xE1EDB9, 0xD4EE5E], // color from http://www.colourlovers.com/palette/937624/Dance_To_Forget pair with 0xF0F2EB
     [0xed5742, 0xf9c600, 0xbacf33, 0x0178ad, 0xffffff], // pair with 0x7b548b
   );
-  eyeStalks.push(eyeStalk);
-  app.scene.add(eyeStalk);
+  bouncers.push(bouncer);
+  app.scene.add(bouncer);
 }
 
 // lighting
@@ -94,23 +93,23 @@ document.addEventListener('mousemove', (e)=>{
   let x = e.pageX / window.innerWidth - 0.5;
   let y = e.pageY / window.innerHeight - 0.5;
   y *= -1;
-  for (var i = 0; i < eyeStalks.length; i++) {
+  for (var i = 0; i < bouncers.length; i++) {
     let newPos = new THREE.Vector3(x, y, 0);
-    newPos.applyAxisAngle((new THREE.Vector3(0,1,0)), Math.PI/(eyeStalks.length/2)*i);
-    eyeStalks[i].move(newPos.toArray(), 0);
+    newPos.applyAxisAngle((new THREE.Vector3(0,1,0)), Math.PI/(bouncers.length/2)*i);
+    bouncers[i].move(newPos.toArray(), 0);
   }
 });
 document.addEventListener('click', (e)=>{
-  for (var i = 0; i < eyeStalks.length; i++) {
-    eyeStalks[i].jump(0.1);
+  for (var i = 0; i < bouncers.length; i++) {
+    bouncers[i].jump(0.1);
   }
 });
 
 app.on('tick', function(dt) {
   //.. handle pre-render updates
-  for (var i = 0; i < eyeStalks.length; i++) {
-    system.integrate(eyeStalks[i].sim.vertices, dt/1000);
-    eyeStalks[i].update(dt/1000);
+  for (var i = 0; i < bouncers.length; i++) {
+    system.integrate(bouncers[i].sim.vertices, dt/1000);
+    bouncers[i].update(dt/1000);
   }
 })
 app.on('render', function(dt) {
